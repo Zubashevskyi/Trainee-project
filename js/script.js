@@ -306,6 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
    // Slider
 
    const slides = document.querySelectorAll('.offer__slide');
+   const slider = document.querySelector('.offer__slider');
    const prev = document.querySelector('.offer__slider-prev');
    const next = document.querySelector('.offer__slider-next');
    const total = document.querySelector('#total');
@@ -328,6 +329,27 @@ document.addEventListener('DOMContentLoaded', () => {
    });
 
 
+   slider.style.position = 'relative';
+
+   const indicarots = document.createElement('ol');
+   indicarots.classList.add('carousel-indicators');
+   const dots = [];
+
+   slider.append(indicarots);
+
+   for (let i = 0; i < slides.length; i++) {
+      const dot = document.createElement('li');
+      dot.classList.add('dot');
+      dot.setAttribute('data-slide-to', i + 1);
+
+      if (i == 0) {
+         dot.style.opacity = 1;
+      }
+      indicarots.append(dot);
+      dots.push(dot);
+   }
+
+
    if (slides.length < 10) {
       total.textContent = `0${slides.length}`;
       current.textContent = `0${slideIndex}`;
@@ -342,6 +364,11 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
          current.textContent = slideIndex;
       }
+   }
+
+   function chencgeOpacity() {
+      dots.forEach(dot => dot.style.opacity = '.5');
+      dots[slideIndex - 1].style.opacity = 1;
    }
 
    prev.addEventListener('click', () => {
@@ -362,6 +389,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       checngeNumber();
+
+      chencgeOpacity();
    });
 
    next.addEventListener('click', () => {
@@ -382,6 +411,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       checngeNumber();
 
+      chencgeOpacity();
+
+   });
+
+   dots.forEach(dot => {
+      dot.addEventListener('click', (e) => {
+         const slideTo = e.target.getAttribute('data-slide-to');
+
+         slideIndex = slideTo;
+
+         offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+
+         slidesField.style.transform = `translate(-${offset}px)`;
+
+         checngeNumber();
+
+         chencgeOpacity();
+      });
    });
 
 });
